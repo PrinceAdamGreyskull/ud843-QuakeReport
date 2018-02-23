@@ -36,11 +36,31 @@ public class QuakeAdapter extends ArrayAdapter {
         EarthQuake earthQuake = (EarthQuake) getItem(position);
 
         TextView magView = (TextView) quakeView.findViewById(R.id.vw_magnitude);
+        TextView dirView = (TextView) quakeView.findViewById(R.id.vw_direction);
         TextView locView = (TextView) quakeView.findViewById(R.id.vw_location);
         TextView datView = (TextView) quakeView.findViewById(R.id.vw_date);
 
+        // Retrieve the full location string
+        String fullLocation = earthQuake.getLocation();
+
+        // Split the location into two pieces: the general direction and the base location
+        String pattern = " of ";
+        String direction;
+        String baseLocation;
+        if (fullLocation.contains(pattern)) {
+            // Handle the normal variant,eg: "200Km NNE of Melbourne, Australia"
+            String[] parts = fullLocation.split(pattern);
+            direction = parts[0] + " of";
+            baseLocation = parts[1];
+        } else {
+            // Handle the special case, eg: "Pacific-Antarctic Ridge"
+            direction = "Near";
+            baseLocation = fullLocation;
+        }
+
         magView.setText(String.format("%1.1f",earthQuake.getMagnitude()));
-        locView.setText(earthQuake.getLocation());
+        dirView.setText(direction);
+        locView.setText(baseLocation);
         //datView.setText("" + earthQuake.getTime_in_ms());
         datView.setText(earthQuake.getDate());
 
