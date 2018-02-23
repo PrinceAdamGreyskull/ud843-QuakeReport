@@ -1,14 +1,17 @@
 package com.example.android.quakereport;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -58,12 +61,86 @@ public class QuakeAdapter extends ArrayAdapter {
             baseLocation = fullLocation;
         }
 
-        magView.setText(String.format("%1.1f",earthQuake.getMagnitude()));
+        // Load all of the new values into the view object
+        magView.setText(formatMagnitude(earthQuake.getMagnitude()));
         dirView.setText(direction);
         locView.setText(baseLocation);
-        //datView.setText("" + earthQuake.getTime_in_ms());
         datView.setText(earthQuake.getDate());
 
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable magnitudeCircle = (GradientDrawable) magView.getBackground();
+
+        // Get the appropriate background color based on the current earthquake magnitude
+        int magnitudeColor = getMagnitudeColor(earthQuake.getMagnitude());
+
+        // Set the color on the magnitude circle
+        magnitudeCircle.setColor(magnitudeColor);
+
         return quakeView;
+    }
+
+    /**
+     * Formats the quake magnitude into a consistent 1 decimal place format to allow for
+     * consistent presentation in the app
+     *
+     * @param mag - the magnitude of the quake returned in double form from USGS
+     * @return - String representation in correct format
+     */
+    private String formatMagnitude(double mag) {
+        DecimalFormat magFormat = new DecimalFormat("0.0");
+        return magFormat.format(mag);
+    }
+
+    /**
+     * Determines the colour of the circle behind the quake magnitude based on the magnitude
+     * (ie a sliding colour scale for severity of quake)
+     *
+     * @param mag - the magnitude of the quake returned in double form from USGS
+     * @return - an integer value representing the matched colour
+     */
+    private int getMagnitudeColor(double mag) {
+        int magColour;
+        int floorMag = (int) Math.floor(mag);
+
+        if (floorMag < 0) {
+            floorMag = 0;
+        }
+
+        switch (floorMag) {
+            case 0:
+            case 1:
+                magColour = R.color.magnitude1;
+                break;
+            case 2:
+                magColour = R.color.magnitude2;
+                break;
+            case 3:
+                magColour = R.color.magnitude3;
+                break;
+            case 4:
+                magColour = R.color.magnitude4;
+                break;
+            case 5:
+                magColour = R.color.magnitude5;
+                break;
+            case 6:
+                magColour = R.color.magnitude6;
+                break;
+            case 7:
+                magColour = R.color.magnitude7;
+                break;
+            case 8:
+                magColour = R.color.magnitude8;
+                break;
+            case 9:
+                magColour = R.color.magnitude9;
+                break;
+            default:
+                magColour = R.color.magnitude10plus;
+                break;
+        }
+
+        return ContextCompat.getColor(getContext(), magColour);
     }
 }
