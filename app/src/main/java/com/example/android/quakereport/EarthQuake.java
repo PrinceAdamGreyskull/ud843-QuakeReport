@@ -12,6 +12,7 @@ public class EarthQuake {
     private double magnitude = 0.0;
     private String location = "";
     private long time_in_ms = 0;
+    private String qUrl = "";
 
     public EarthQuake(double mag, String loc, long dat){
         magnitude = mag;
@@ -36,5 +37,18 @@ public class EarthQuake {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, YYYY\nH:mm a");
 
         return dateFormatter.format(quakeDate);
+    }
+
+    public String getqUrl() {
+        return qUrl;
+    }
+
+    /**
+     * Set and get the URL on the USGS page for visiting the detailed quake data
+     *
+     * @param qUrl - the URL supplied in the USGS JSON file
+     */
+    public void setqUrl(String qUrl) {
+        this.qUrl = qUrl;
     }
 }

@@ -73,8 +73,12 @@ public final class QueryUtils {
                 location = tmpProperties.getString("place");
                 date = tmpProperties.getLong("time");
 
+                //Create a new Earthquake object
+                EarthQuake eQuake = new EarthQuake(magnitude, location, date);
+                eQuake.setqUrl(tmpProperties.getString("url"));
+
                 // Add new earthquake to the ArrayList
-                earthquakes.add(new EarthQuake(magnitude,location,date));
+                earthquakes.add(eQuake);
             }
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
